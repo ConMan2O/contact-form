@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Form</title>
+  <link rel="icon" href="/favicon.png">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+  <form>
+    <h1>Contact Form</h1>
+
+    <label for="first">First Name <input type="text" id="first" name="first"></label>
+    <label for="last">Last Name <input type="text" id="last" name="last"></label>
+    <label for="job">Job Title <input type="text" id="job" name="job"></label>
+
+    <label for="company">Company <input type="text" id="company" name="company"></label>
+    <label for="linkedin">LinkedIn URL <input type="url" id="linkedin" name="linkedin"></label>
+    <label for="email">Email Address <input type="email" id="email" name="email"></label>
+
+    <label for="meet" class="half">How did we meet?
+      <select id="meet" name="meet">
+        <option value="">Please select</option>
+        <option>School</option>
+        <option>Hackathon</option>
+        <option>Conference</option>
+        <option>Other</option>
+      </select>
+    </label>
+
+    <label for="other" class="half">
+        Other (please specify) 
+        <input type="text" id="other" name="other">
+    </label>
+
+    <label for="message" class="full">
+        Message 
+        <textarea id="message" name="message" rows="4"></textarea>
+    </label>
+
+    <label for="mailing" class="full check">
+        <input type="checkbox" id="mailing" name="mailing"> 
+        Please add me to your mailing list
+    </label>
+
+    <p class="full check">Choose an email format:
+      <input type="radio" id="html" name="format" value="html" checked> 
+      <label for="html">HTML</label>
+
+      <input type="radio" id="text" name="format" value="text"> 
+      <label for="text">Text</label>
+    </p>
+
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>
