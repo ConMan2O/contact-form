@@ -6,27 +6,46 @@
   <title>Contact Form</title>
   <link rel="icon" href="/favicon.png">
   <link rel="stylesheet" href="/styles.css">
+  <script src="/form.js" defer></script>
 </head>
 
 <body>
-  <form>
+  <form id="contact-form" novalidate>
     <h1>Contact Form</h1>
 
-    <label for="first">First Name <input type="text" id="first" name="first"></label>
-    <label for="last">Last Name <input type="text" id="last" name="last"></label>
+    <div class="group">
+      <label for="first">First Name <input type="text" id="first" name="first"></label>
+      <span class="error" id="first-error">First name is required.</span>
+    </div>
+
+    <div class="group">
+      <label for="last">Last Name <input type="text" id="last" name="last"></label>
+      <span class="error" id="last-error">Last name is required.</span>
+    </div>
+
     <label for="job">Job Title <input type="text" id="job" name="job"></label>
 
     <label for="company">Company <input type="text" id="company" name="company"></label>
-    <label for="linkedin">LinkedIn URL <input type="url" id="linkedin" name="linkedin"></label>
-    <label for="email">Email Address <input type="email" id="email" name="email"></label>
+
+    <div class="group">
+      <label for="linkedin">LinkedIn URL <input type="url" id="linkedin" name="linkedin"></label>
+      <span class="error" id="linkedin-error">Please enter a valid LinkedIn address.</span>
+    </div>
+
+    <div class ="group">
+      <label for="email">Email Address <input type="email" id="email" name="email"></label>
+      <span class="error" id="email-error">Please enter a valid email address.</span>
+      <span class="error" id="mailing-error">Please enter an email address.</span>
+    </div>
 
     <label for="meet" class="half">How did we meet?
+      <span class="error" id="meet-error">Please Select How We Met</span>
       <select id="meet" name="meet">
-        <option value="">Please select</option>
-        <option>School</option>
-        <option>Hackathon</option>
-        <option>Conference</option>
-        <option>Other</option>
+        <option value="none">Please select</option>
+        <option value ="School">School</option>
+        <option value ="Hackathon">Hackathon</option>
+        <option value ="Conference">Conference</option>
+        <option value ="Other">Other</option>
       </select>
     </label>
 
