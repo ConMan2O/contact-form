@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Admin</title>
+        <link rel="icon" href="/favicon.png">          <!--Favicon-->
+        <!-- Add data table resources -->
+        <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+        <script src="https://cdn.datatables.net/3.1.4/js/dataTables.min.js"></script>
+        <link rel="stylesheet" href="/styles.css">
+        <link rel="Stylesheet" href="https://cdn.datatables.net/3.1.4/css/dataTables.dataTables.min.css">
+    </head>
+    <body>
+        <h1>Contacts</h1>
+        <table id="contact-table" class="display">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>LinkedIn</th>
+                    <th>Email</th>
+                    <th>How We Met</th>
+                    <th>Message</th>
+                    <th>Mailing List</th>
+                    <th>Format</th>
+                    <th>Date/Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% contactForm.forEach(contact => { %>
+                    <tr>
+                        <td>
+                            <%= contact.first %> <%= contact.last %>
+                        </td>
+                        <td>
+                            <%= contact.job %>
+                        </td>
+                        <td>
+                            <%= contact.company %>
+                        </td>
+                        <td>
+                            <%= contact.linkedin %>
+                        </td>
+                        <td>
+                            <%= contact.email %>
+                        </td>
+                        <td>
+                            <%= contact.meet === 'Other' ? contact.other : contact.meet %>
+                        </td>
+                        <td>
+                            <%= contact.message %>
+                        </td>
+                        <td>
+                            <%= contact.mailing ? 'Yes' : 'No' %>
+                        </td>
+                        <td>
+                            <%= contact.format %>
+                        </td>
+                        <td>
+                            <%= contact.timestamp.toLocaleString() %>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+
+        <script>
+            new DataTable('#contact-table');
+        </script>
+
+        <a href="/"><button>Back to Form</button></a>
+    </body>
+</html>
