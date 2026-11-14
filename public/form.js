@@ -43,6 +43,9 @@ document.getElementById("contact-form").onsubmit = () => {
         document.getElementById("meet-error").style.display = "block";
         isValid = false;
     }
+        else if(meet==="Other"){
+        document.getElementById("met").style.display = "block";
+    }
 
 
 
