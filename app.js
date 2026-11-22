@@ -1,9 +1,22 @@
 // Import the express module
 import express from 'express';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// Import the mysql2 module
+import mysql2 from 'mysql2';
+
+// Import .env
+import dotenv from 'dotenv';
+dotenv.config();
+
+
+// Create a connection pool to the MySQL database
+const pool = mysql2.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT
+}).promise();
 
 // Create an instance of an Express application
 const app = express();
@@ -13,7 +26,7 @@ let contactForm = [];
 // Set the view engine to EJS
 app.set('view engine', 'ejs');
 
-const PORT = process.env.PORT || 3002;
+const PORT = 3002;
 
 // Enable static file serving
 app.use(express.static('public'));
@@ -38,18 +51,54 @@ app.get('/confirm', (req, res) => {
 
 
 // Form submission route
-app.post('/submit', (req, res) => {
+app.post('/submit', async (req, res) => {
     const contact = req.body;
     contact.timestamp = new Date();
 
-    contactForm.push(contact);
+    contact.mailing = contact.mailing ? 1 : 0;
 
-    res.render('confirm', { contact });
+    const sql = `INSERT INTO contacts
+        (first, last, job, company, linkedin, email, meet, other, message, mailing, format)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    const params = [
+        contact.first,
+        contact.last,
+        contact.job,
+        contact.company,
+        contact.linkedin,
+        contact.email,
+        contact.meet,
+        contact.other,
+        contact.message,
+        contact.mailing,
+        contact.format
+    ];
+
+    try {
+        // Execute the Query
+        const [result] = await pool.execute(sql, params);
+
+        contact.id = result.insertId;
+        console.log("A new row was inserted with id:" + contact.id);
+
+        res.render('confirm', { contact });
+    } catch (error) {
+        console.error('Database Error:', error);
+        res.status(500).send('Database Error Occured');
+    }
 });
 
 // admin route 
-app.get('/admin', (req, res) => {
-    res.render('admin', { contactForm });
+app.get('/admin', async (req, res) => {
+    try {
+        const [contactForm] = await pool.query('SELECT * FROM contacts');
+        console.log(contactForm);
+        res.render('admin', { contactForm });
+    } catch (error) {
+        console.error('Database Error:', error);
+        res.status(500).send('Database Error Occured');
+    }
 });
 
 
