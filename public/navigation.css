@@ -3,6 +3,8 @@ nav {
   justify-content: space-evenly;
   background: #202020be;
   padding: 1rem;
+  flex-wrap: wrap; 
+  gap: 0.5rem 1rem;
 }
 
 nav a {
