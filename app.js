@@ -11,6 +11,10 @@ dotenv.config();
 // Import server-side validation
 import {validateForm} from './validation.js';
 
+import session from 'express-session';
+
+
+
 
 // Create a connection pool to the MySQL database
 const pool = mysql2.createPool({
@@ -21,10 +25,23 @@ const pool = mysql2.createPool({
     port: process.env.DB_PORT
 }).promise();
 
+function requireLogin(req, res, next) {
+    if(req.session.loggedIn) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+}
+
 // Create an instance of an Express application
 const app = express();
 
-let contactForm = [];
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}));
+
 
 // Set the view engine to EJS
 app.set('view engine', 'ejs');
@@ -44,7 +61,7 @@ app.get('/', (req, res) => {
 
 // Define the contact path
 app.get('/contact', (req, res) => {
-    res.render('contact');
+    res.render('contact', {errors: null});
 });
 
 // Define the confirm path
@@ -62,13 +79,14 @@ app.get('/portfolio', (req, res) => {
 app.post('/submit', async (req, res) => {
     const contact = req.body;
     contact.timestamp = new Date();
+    console.log(contact);
 
     contact.mailing = contact.mailing ? 1 : 0;
 
     const valid = validateForm(contact);
     if(!valid.isValid){
         console.log(valid);
-        res.render('home', {errors: valid.errors});
+        res.render('contact', {errors: valid.errors});
         return;
     }
 
@@ -105,7 +123,7 @@ app.post('/submit', async (req, res) => {
 });
 
 // admin route 
-app.get('/admin', async (req, res) => {
+app.get('/admin', requireLogin, async (req, res) => {
     try {
         const [contactForm] = await pool.query('SELECT * FROM contacts');
         console.log(contactForm);
@@ -113,6 +131,25 @@ app.get('/admin', async (req, res) => {
     } catch (error) {
         console.error('Database Error:', error);
         res.status(500).send('Database Error Occured');
+    }
+});
+
+// login route
+app.get('/login', (req, res) => {
+    res.render('login', {error: null});
+});
+
+// login form submission route
+app.post('/login', (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    if (username === process.env.ADMIN_USER && password === process.env.ADMIN_PASSWORD) {
+        req.session.loggedIn = true;
+        res.redirect('/admin');
+    }
+    else {
+        res.render('login', {error: 'Invalid username or password'});
     }
 });
 

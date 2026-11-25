@@ -12,6 +12,12 @@
 <body>
   <%- include('partials/navigation') %>
 
+  <% if (errors){ %>
+    <% errors.forEach(error => { %>
+      <p><%= error %></p>
+    <% }) %>
+  <% } %>
+
   <form id="contact-form" method="POST" action="/submit" novalidate>
     <h1>Contact Form</h1>
 
