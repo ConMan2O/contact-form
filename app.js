@@ -8,6 +8,9 @@ import mysql2 from 'mysql2';
 import dotenv from 'dotenv';
 dotenv.config();
 
+// Import server-side validation
+import {validateForm} from './validation.js';
+
 
 // Create a connection pool to the MySQL database
 const pool = mysql2.createPool({
@@ -49,6 +52,11 @@ app.get('/confirm', (req, res) => {
     res.render('confirm');
 });
 
+// Define the portfolio path
+app.get('/portfolio', (req, res) => {
+    res.render('portfolio');
+});
+
 
 // Form submission route
 app.post('/submit', async (req, res) => {
@@ -56,6 +64,13 @@ app.post('/submit', async (req, res) => {
     contact.timestamp = new Date();
 
     contact.mailing = contact.mailing ? 1 : 0;
+
+    const valid = validateForm(contact);
+    if(!valid.isValid){
+        console.log(valid);
+        res.render('home', {errors: valid.errors});
+        return;
+    }
 
     const sql = `INSERT INTO contacts
         (first, last, job, company, linkedin, email, meet, other, message, mailing, format)
